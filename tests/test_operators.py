@@ -13,6 +13,7 @@ from minitorch.operators import (
     id,
     inv,
     inv_back,
+    is_close,
     log_back,
     lt,
     max,
@@ -23,6 +24,7 @@ from minitorch.operators import (
     relu,
     relu_back,
     sigmoid,
+    sum as ops_sum,
 )
 
 from .strategies import assert_close, small_floats
@@ -107,16 +109,27 @@ def test_sigmoid(a: float) -> None:
     * It crosses 0 at 0.5
     * It is  strictly increasing.
     """
-    # TODO: Implement for Task 0.2.
-    raise NotImplementedError("Need to implement for Task 0.2")
+    sig_a = sigmoid(a)
+    assert 0.0 <= sig_a <= 1.0, f"Sigmoid should be between 0 and 1, got {sig_a}"
+    
+    one_minus_sig = 1.0 - sigmoid(a)
+    sig_neg = sigmoid(-a)
+    assert is_close(one_minus_sig, sig_neg), f"1-sigmoid({a}) should equal sigmoid(-{a})"
+
+    sig_zero = sigmoid(0.0)
+    assert is_close(sig_zero, 0.5), f"Sigmoid(0) should be 0.5, got {sig_zero}"
+    
+    sig_a = sigmoid(a)
+    sig_a_plus = sigmoid(a + 1e-6)
+    assert sig_a_plus >= sig_a, "Sigmoid should be non-decreasing"
 
 
 @pytest.mark.task0_2
 @given(small_floats, small_floats, small_floats)
 def test_transitive(a: float, b: float, c: float) -> None:
     """Test the transitive property of less-than (a < b and b < c implies a < c)"""
-    # TODO: Implement for Task 0.2.
-    raise NotImplementedError("Need to implement for Task 0.2")
+    if lt(a, b) and lt(b, c):
+        assert lt(a, c), f"Transitivity failed: {a} < {b} < {c} but not {a} < {c}"
 
 
 @pytest.mark.task0_2
@@ -124,8 +137,12 @@ def test_symmetric() -> None:
     """Write a test that ensures that :func:`minitorch.operators.mul` is symmetric, i.e.
     gives the same value regardless of the order of its input.
     """
-    # TODO: Implement for Task 0.2.
-    raise NotImplementedError("Need to implement for Task 0.2")
+    test_cases = [(2.0, 3.0), (-1.0, 5.0), (0.0, 10.0), (-3.0, -4.0)]
+    
+    for x, y in test_cases:
+        result1 = mul(x, y)
+        result2 = mul(y, x)
+        assert is_close(result1, result2), f"Multiplication should be symmetric: {x} * {y} = {result1}, {y} * {x} = {result2}"
 
 
 @pytest.mark.task0_2
@@ -133,15 +150,28 @@ def test_distribute() -> None:
     r"""Write a test that ensures that your operators distribute, i.e.
     :math:`z \times (x + y) = z \times x + z \times y`
     """
-    # TODO: Implement for Task 0.2.
-    raise NotImplementedError("Need to implement for Task 0.2")
+    test_cases = [(2.0, 3.0, 4.0), (-1.0, 5.0, -2.0), (0.0, 10.0, 3.0), (-3.0, -4.0, 2.0)]
+    
+    for x, y, z in test_cases:
+        left_side = mul(z, add(x, y))
+        right_side = add(mul(z, x), mul(z, y))
+        assert is_close(left_side, right_side), f"Distributive property failed: {z} * ({x} + {y}) = {left_side}, {z} * {x} + {z} * {y} = {right_side}"
 
 
 @pytest.mark.task0_2
 def test_other() -> None:
     """Write a test that ensures some other property holds for your functions."""
-    # TODO: Implement for Task 0.2.
-    raise NotImplementedError("Need to implement for Task 0.2")
+    test_cases = [(2.0, 3.0, 4.0), (-1.0, 5.0, -2.0), (0.0, 10.0, 3.0), (-3.0, -4.0, 2.0)]
+    
+    for a, b, c in test_cases:
+        left_assoc = add(add(a, b), c)
+        right_assoc = add(a, add(b, c))
+        assert is_close(left_assoc, right_assoc), f"Addition should be associative: ({a} + {b}) + {c} = {left_assoc}, {a} + ({b} + {c}) = {right_assoc}"
+    
+    for a, b, c in test_cases:
+        left_assoc = mul(mul(a, b), c)
+        right_assoc = mul(a, mul(b, c))
+        assert is_close(left_assoc, right_assoc), f"Multiplication should be associative: ({a} * {b}) * {c} = {left_assoc}, {a} * ({b} * {c}) = {right_assoc}"
 
 
 # ## Task 0.3  - Higher-order functions
@@ -168,14 +198,15 @@ def test_sum_distribute(ls1: List[float], ls2: List[float]) -> None:
     """Write a test that ensures that the sum of `ls1` plus the sum of `ls2`
     is the same as the sum of each element of `ls1` plus each element of `ls2`.
     """
-    # TODO: Implement for Task 0.3.
-    raise NotImplementedError("Need to implement for Task 0.3")
+    sum_ls1_plus_sum_ls2 = sum(ls1) + sum(ls2)
+    sum_ls1_plus_ls2_elements = sum(addLists(ls1, ls2))
+    assert_close(sum_ls1_plus_sum_ls2, sum_ls1_plus_ls2_elements)
 
 
 @pytest.mark.task0_3
 @given(lists(small_floats))
 def test_sum(ls: List[float]) -> None:
-    assert_close(sum(ls), minitorch.operators.sum(ls))
+    assert_close(sum(ls), ops_sum(ls))
 
 
 @pytest.mark.task0_3
