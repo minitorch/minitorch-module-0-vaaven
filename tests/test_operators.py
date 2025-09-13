@@ -110,14 +110,16 @@ def test_sigmoid(a: float) -> None:
     """
     sig_a = sigmoid(a)
     assert 0.0 <= sig_a <= 1.0, f"Sigmoid should be between 0 and 1, got {sig_a}"
-    
+
     one_minus_sig = 1.0 - sigmoid(a)
     sig_neg = sigmoid(-a)
-    assert is_close(one_minus_sig, sig_neg), f"1-sigmoid({a}) should equal sigmoid(-{a})"
+    assert is_close(
+        one_minus_sig, sig_neg
+    ), f"1-sigmoid({a}) should equal sigmoid(-{a})"
 
     sig_zero = sigmoid(0.0)
     assert is_close(sig_zero, 0.5), f"Sigmoid(0) should be 0.5, got {sig_zero}"
-    
+
     sig_a = sigmoid(a)
     sig_a_plus = sigmoid(a + 1e-6)
     assert sig_a_plus >= sig_a, "Sigmoid should be non-decreasing"
@@ -137,11 +139,13 @@ def test_symmetric() -> None:
     gives the same value regardless of the order of its input.
     """
     test_cases = [(2.0, 3.0), (-1.0, 5.0), (0.0, 10.0), (-3.0, -4.0)]
-    
+
     for x, y in test_cases:
         result1 = mul(x, y)
         result2 = mul(y, x)
-        assert is_close(result1, result2), f"Multiplication should be symmetric: {x} * {y} = {result1}, {y} * {x} = {result2}"
+        assert is_close(
+            result1, result2
+        ), f"Multiplication should be symmetric: {x} * {y} = {result1}, {y} * {x} = {result2}"
 
 
 @pytest.mark.task0_2
@@ -149,28 +153,44 @@ def test_distribute() -> None:
     r"""Write a test that ensures that your operators distribute, i.e.
     :math:`z \times (x + y) = z \times x + z \times y`
     """
-    test_cases = [(2.0, 3.0, 4.0), (-1.0, 5.0, -2.0), (0.0, 10.0, 3.0), (-3.0, -4.0, 2.0)]
-    
+    test_cases = [
+        (2.0, 3.0, 4.0),
+        (-1.0, 5.0, -2.0),
+        (0.0, 10.0, 3.0),
+        (-3.0, -4.0, 2.0),
+    ]
+
     for x, y, z in test_cases:
         left_side = mul(z, add(x, y))
         right_side = add(mul(z, x), mul(z, y))
-        assert is_close(left_side, right_side), f"Distributive property failed: {z} * ({x} + {y}) = {left_side}, {z} * {x} + {z} * {y} = {right_side}"
+        assert is_close(
+            left_side, right_side
+        ), f"Distributive property failed: {z} * ({x} + {y}) = {left_side}, {z} * {x} + {z} * {y} = {right_side}"
 
 
 @pytest.mark.task0_2
 def test_other() -> None:
     """Write a test that ensures some other property holds for your functions."""
-    test_cases = [(2.0, 3.0, 4.0), (-1.0, 5.0, -2.0), (0.0, 10.0, 3.0), (-3.0, -4.0, 2.0)]
-    
+    test_cases = [
+        (2.0, 3.0, 4.0),
+        (-1.0, 5.0, -2.0),
+        (0.0, 10.0, 3.0),
+        (-3.0, -4.0, 2.0),
+    ]
+
     for a, b, c in test_cases:
         left_assoc = add(add(a, b), c)
         right_assoc = add(a, add(b, c))
-        assert is_close(left_assoc, right_assoc), f"Addition should be associative: ({a} + {b}) + {c} = {left_assoc}, {a} + ({b} + {c}) = {right_assoc}"
-    
+        assert is_close(
+            left_assoc, right_assoc
+        ), f"Addition should be associative: ({a} + {b}) + {c} = {left_assoc}, {a} + ({b} + {c}) = {right_assoc}"
+
     for a, b, c in test_cases:
         left_assoc = mul(mul(a, b), c)
         right_assoc = mul(a, mul(b, c))
-        assert is_close(left_assoc, right_assoc), f"Multiplication should be associative: ({a} * {b}) * {c} = {left_assoc}, {a} * ({b} * {c}) = {right_assoc}"
+        assert is_close(
+            left_assoc, right_assoc
+        ), f"Multiplication should be associative: ({a} * {b}) * {c} = {left_assoc}, {a} * ({b} * {c}) = {right_assoc}"
 
 
 # ## Task 0.3  - Higher-order functions

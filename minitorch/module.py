@@ -50,11 +50,11 @@ class Module:
 
         """
         result = [(name, param) for name, param in self._parameters.items()]
-        
+
         for child_name, child_module in self._modules.items():
             for param_name, param in child_module.named_parameters():
                 result.append((f"{child_name}.{param_name}", param))
-        
+
         return result
 
     def parameters(self) -> Sequence[Parameter]:
