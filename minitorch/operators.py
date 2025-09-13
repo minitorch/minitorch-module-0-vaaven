@@ -3,7 +3,6 @@
 import math
 
 # ## Task 0.1
-from typing import Callable, Iterable
 
 #
 # Implementation of a prelude of elementary functions.

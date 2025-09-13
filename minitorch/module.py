@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-from pyexpat import model
 from typing import Any, Dict, Optional, Sequence, Tuple
 
 

@@ -12,6 +12,7 @@ def make_pts(N):
         
     Returns:
         List[Tuple[float, float]]: List of (x1, x2) coordinate pairs
+
     """
     X = []
     for i in range(N):
@@ -29,7 +30,9 @@ class Graph:
         N (int): Number of data points
         X (List[Tuple[float, float]]): List of (x1, x2) coordinate pairs
         y (List[int]): List of binary class labels (0 or 1)
+
     """
+
     N: int
     X: List[Tuple[float, float]]
     y: List[int]
@@ -48,6 +51,7 @@ def simple(N):
         
     Returns:
         Graph: Dataset with N points and binary labels
+
     """
     X = make_pts(N)
     y = []
@@ -70,6 +74,7 @@ def diag(N):
         
     Returns:
         Graph: Dataset with N points and binary labels
+
     """
     X = make_pts(N)
     y = []
@@ -92,6 +97,7 @@ def split(N):
         
     Returns:
         Graph: Dataset with N points and binary labels
+
     """
     X = make_pts(N)
     y = []
@@ -114,6 +120,7 @@ def xor(N):
         
     Returns:
         Graph: Dataset with N points and binary labels
+
     """
     X = make_pts(N)
     y = []
@@ -136,6 +143,7 @@ def circle(N):
         
     Returns:
         Graph: Dataset with N points and binary labels
+
     """
     X = make_pts(N)
     y = []
@@ -161,6 +169,7 @@ def spiral(N):
         
     Returns:
         Graph: Dataset with N points and binary labels
+
     """
     def x(t):
         return t * math.cos(t) / 20.0
